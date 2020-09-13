@@ -30,6 +30,10 @@ func executeDoc(doc *goquery.Document, vm *otto.Otto, method string, param ...in
 	if !ok {
 		return nil, errors.New("function not support")
 	}
+	return getFunction(selector, vm), nil
+}
+
+func getFunction(selector *goquery.Selection, vm *otto.Otto) func(call otto.FunctionCall) otto.Value {
 	return func(call otto.FunctionCall) otto.Value {
 		if len(selector.Nodes) == 0 {
 			return otto.NullValue()
@@ -84,7 +88,7 @@ func executeDoc(doc *goquery.Document, vm *otto.Otto, method string, param ...in
 			return otto.NullValue()
 		}
 		return val
-	}, nil
+	}
 }
 
 func setDocExec(vm *otto.Otto, doc *goquery.Document) {
