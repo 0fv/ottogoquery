@@ -42,6 +42,10 @@ func getFunction(selector *goquery.Selection, vm *otto.Otto) func(call otto.Func
 		if err != nil {
 			return otto.NullValue()
 		}
+		if method2 == "clone" {
+			vv, _ := vm.ToValue(getFunction(selector, vm))
+			return vv
+		}
 		t := call.Argument(1)
 		var param2 reflect.Value
 		flag := false
@@ -64,7 +68,7 @@ func getFunction(selector *goquery.Selection, vm *otto.Otto) func(call otto.Func
 			return otto.NullValue()
 		}
 		m2 := reflect.ValueOf(selector).MethodByName(method2)
-		if m2.IsZero() {
+		if !m2.IsValid() {
 			return otto.NullValue()
 		}
 		var result2 []reflect.Value
