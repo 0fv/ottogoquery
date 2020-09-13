@@ -10,21 +10,22 @@ import (
 )
 
 func Test_f(t *testing.T) {
-	buf, _ := ioutil.ReadFile("../1.html")
+	buf, _ := ioutil.ReadFile("1.html")
 	vdoc, err := NewVMDocFromReader(bytes.NewReader(buf))
 	if err != nil {
 		log.Panicln(err)
 	}
 	jsCommand := `
-		f=docExec("Find","#content > div> div.indexs > h2 > a")
-		if (f != null){
-			f("Eq",0)
-			rr =f("Text")
-		}else{
-			r=2	
+		f=docExec("Find","#content > div > div.indexs > h2 > a")
+		len = f("Length")
+		r = []
+		for (i=0;i<len;i++){
+			f1=f("clone")
+			f1("Eq",i)
+			r.push(f1("Text"))
 		}
+		r = r
 		`
-
 	r, err := vdoc.Run(jsCommand)
 	if err != nil {
 		log.Panicln(err)
